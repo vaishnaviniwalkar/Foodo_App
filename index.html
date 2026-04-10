@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foodify | Premium Food Delivery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-emerald-600 tracking-tighter cursor-pointer" onclick="window.location.reload()">Foodo</h1>
+            <div class="flex items-center gap-4">
+                <button id="cartBtn" class="relative p-2 hover:bg-gray-100 rounded-full transition">
+                    <i data-lucide="shopping-bag"></i>
+                    <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                </button>
+                <div id="authContainer" class="flex items-center gap-3"></div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-emerald-900 py-20 px-4 text-center transition-all duration-300" id="heroSection">
+        <h2 class="text-4xl md:text-5xl font-bold text-white mb-8">Deliciousness delivered to your door</h2>
+        <div class="max-w-2xl mx-auto flex bg-white rounded-xl p-2 shadow-xl">
+            <div class="flex items-center px-3 border-r border-gray-200 hidden md:flex">
+                <i data-lucide="map-pin" class="text-emerald-600 w-5"></i>
+                <input type="text" placeholder="Mumbai, India" class="p-2 outline-none w-36" readonly>
+            </div>
+            <div class="flex items-center px-3 w-full">
+                <i data-lucide="search" class="text-gray-400 w-5"></i>
+                <input type="text" id="searchInput" placeholder="Search for restaurants..." class="p-2 outline-none w-full">
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-12 min-h-[60vh] relative">
+        
+        <div id="restaurantView" class="block transition-opacity duration-300">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-2xl font-bold text-gray-800">Top Restaurants in Mumbai</h3>
+                <div class="flex gap-2 overflow-x-auto pb-2 md:pb-0" id="restaurantFilters">
+                    <button class="filter-btn active" data-cuisine="all">All</button>
+                    <button class="filter-btn" data-cuisine="Italian">Italian</button>
+                    <button class="filter-btn" data-cuisine="Indian">Indian</button>
+                    <button class="filter-btn" data-cuisine="Japanese">Japanese</button>
+                    <button class="filter-btn" data-cuisine="Desserts">Desserts</button>
+                    <button class="filter-btn" data-cuisine="Juices">Fresh Juices</button>
+                </div>
+            </div>
+            <div id="restaurantGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+
+        <div id="menuView" class="hidden transition-opacity duration-300">
+            <button id="backToRestaurants" class="mb-6 flex items-center gap-2 text-emerald-600 hover:text-emerald-800 font-bold transition">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i> Back to Restaurants
+            </button>
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 mb-8 flex items-center justify-between">
+                <div>
+                    <h3 class="text-3xl font-bold text-gray-800" id="activeRestaurantName">Restaurant Name</h3>
+                    <p class="text-gray-500 mt-1" id="activeRestaurantCuisine">Cuisine Type</p>
+                </div>
+                <div class="text-right hidden md:block">
+                    <span class="bg-green-100 text-green-700 font-bold px-3 py-2 rounded-lg text-lg" id="activeRestaurantRating">4.5 ★</span>
+                </div>
+            </div>
+            <h4 class="text-xl font-bold text-gray-800 mb-6 border-b pb-2">Full Menu</h4>
+            <div id="foodGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        </div>
+
+        <div id="scrollSentinel" class="w-full h-24 flex items-center justify-center mt-8 hidden">
+            <i data-lucide="loader-2" class="w-8 h-8 text-emerald-600 animate-spin"></i>
+        </div>
+
+        <div id="trackingView" class="hidden max-w-2xl mx-auto py-12 text-center">
+            <div class="bg-white p-10 rounded-3xl shadow-xl border border-gray-100">
+                <div class="w-24 h-24 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="truck" class="w-12 h-12"></i>
+                </div>
+                <h2 class="text-3xl font-bold mb-2">Order Confirmed!</h2>
+                <p class="text-gray-500 mb-8">Order #FD-9921 is being prepared.</p>
+                
+                <div class="relative space-y-8 text-left max-w-xs mx-auto">
+                    <div id="step1" class="flex items-center gap-4 text-emerald-600 font-bold opacity-100">
+                        <div class="w-8 h-8 rounded-full border-2 border-emerald-600 flex items-center justify-center bg-emerald-600 text-white text-xs">1</div>
+                        <span>Order Received</span>
+                    </div>
+                    <div id="step2" class="flex items-center gap-4 text-gray-400 opacity-50">
+                        <div class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs">2</div>
+                        <span>Preparing your order</span>
+                    </div>
+                    <div id="step3" class="flex items-center gap-4 text-gray-400 opacity-50">
+                        <div class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs">3</div>
+                        <span>Out for Delivery</span>
+                    </div>
+                    <div id="step4" class="flex items-center gap-4 text-gray-400 opacity-50">
+                        <div class="w-8 h-8 rounded-full border-2 border-gray-300 flex items-center justify-center text-xs">4</div>
+                        <span>Arrived & Enjoy!</span>
+                    </div>
+                </div>
+                <button onclick="window.location.reload()" class="mt-12 text-emerald-600 font-bold hover:underline">Back to Home</button>
+            </div>
+        </div>
+
+    </main>
+
+    <div id="cartSidebar" class="fixed inset-y-0 right-0 w-80 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 z-[100] p-6 flex flex-col">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold">Your Order</h2>
+            <button id="closeCart"><i data-lucide="x"></i></button>
+        </div>
+        <div id="cartItems" class="space-y-4 overflow-y-auto flex-grow mb-24"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6 border-t bg-gray-50 h-32">
+            <div class="flex justify-between font-bold text-lg mb-4">
+                <span>Total:</span>
+                <span id="cartTotal">₹0</span>
+            </div>
+            <button id="openCheckoutBtn" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition">Checkout</button>
+        </div>
+    </div>
+
+    <div id="authModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[200] p-4 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-md rounded-2xl p-8 relative shadow-2xl">
+            <button id="closeAuth" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600"><i data-lucide="x"></i></button>
+            <h2 id="authTitle" class="text-3xl font-bold mb-2">Login</h2>
+            <p class="text-gray-500 mb-6">Enter your details to order your favorites.</p>
+            <form id="authForm" class="space-y-4">
+                <div id="nameField" class="hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                    <input type="text" class="w-full border p-3 rounded-xl outline-none focus:border-emerald-600">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                    <input type="email" required class="w-full border p-3 rounded-xl outline-none focus:border-emerald-600">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" required class="w-full border p-3 rounded-xl outline-none focus:border-emerald-600">
+                </div>
+                <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold hover:bg-emerald-700 transition shadow-lg shadow-emerald-200">Continue</button>
+            </form>
+            <p class="text-center mt-6 text-sm text-gray-600">
+                <span id="authToggleText">New to Foodify?</span> 
+                <button id="toggleAuth" class="text-emerald-600 font-bold ml-1">Create an account</button>
+            </p>
+        </div>
+    </div>
+
+    <div id="checkoutModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[250] p-4 backdrop-blur-md">
+        <div class="bg-white w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative">
+            <button id="closeCheckout" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 z-10"><i data-lucide="x"></i></button>
+            <div class="bg-gray-50 p-8 md:w-5/12 border-r">
+                <h3 class="text-xl font-bold mb-4">Order Summary</h3>
+                <div id="checkoutItems" class="space-y-3 max-h-60 overflow-y-auto mb-4"></div>
+                <div class="border-t pt-4 space-y-2 text-sm">
+                    <div class="flex justify-between"><span>Subtotal</span> <span id="sumSubtotal">₹0</span></div>
+                    <div class="flex justify-between text-gray-500"><span>Delivery Fee</span> <span>₹49</span></div>
+                    <div class="flex justify-between font-bold text-lg border-t pt-2 mt-2">
+                        <span>Total</span> <span id="sumTotal">₹0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="p-8 md:w-7/12">
+                <h3 class="text-2xl font-bold mb-6">Delivery Details</h3>
+                <form id="checkoutForm" class="space-y-4">
+                    <input type="text" placeholder="Delivery Address" required class="w-full border p-3 rounded-xl outline-none focus:border-emerald-600">
+                    <div class="flex gap-4">
+                        <input type="text" placeholder="Apt/Suite" class="w-1/2 border p-3 rounded-xl outline-none focus:border-emerald-600">
+                        <input type="text" placeholder="Phone" required class="w-1/2 border p-3 rounded-xl outline-none focus:border-emerald-600">
+                    </div>
+                    <h4 class="font-bold pt-2">Payment Method</h4>
+                    <div class="flex gap-2">
+                        <button type="button" class="flex-1 border-2 border-emerald-600 bg-emerald-50 p-3 rounded-xl text-center text-sm font-bold">💳 Card/UPI</button>
+                        <button type="button" class="flex-1 border p-3 rounded-xl text-center text-sm text-gray-500">💵 Cash</button>
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-600 text-white py-4 rounded-xl font-bold text-lg mt-4 hover:bg-emerald-700 shadow-lg transition">Place Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
