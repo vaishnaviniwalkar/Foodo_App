@@ -3,7 +3,7 @@
 
 **Foodo** is a modern, fully responsive Single Page Application (SPA) for food delivery. Built entirely with Vanilla JavaScript and Tailwind CSS, it focuses on high performance, seamless user experience, and modern web development practices without relying on heavy frameworks like React.
 
-**[🔴 Live Demo: Click here](https://flourishing-licorice-2f7d6d.netlify.app/)(#)** 
+**[🔴 Live Demo: Click here](https://flourishing-licorice-2f7d6d.netlify.app/)** 
 
 ---
 
